@@ -1,7 +1,3 @@
 .home-container {
   display: flex;
 }
-
-.home-container div {
-  flex: 1;
-}
