@@ -1,7 +1,6 @@
 import App from "./App";
-// import Home from "./views/Home";
-// import Play from "./views/Play";
-// import Leaderboard from "./views/Leaderboard";
+import Welcome from "./views/Welcome";
+import Home from "./views/Home";
 import ErrorPage from "./views/ErrorPage";
 
 const routes = [
@@ -9,20 +8,20 @@ const routes = [
     path: "/",
     element: <App />,
     errorElement: <ErrorPage />,
-    // children: [
-    //   {
-    //     index: true,
-    //     element: <Home />,
-    //   },
-    //   {
-    //     path: "play/:slug?",
-    //     element: <Play />,
-    //   },
-    //   {
-    //     path: "leaderboard/:slug?",
-    //     element: <Leaderboard />,
-    //   },
-    // ],
+    children: [
+      {
+        index: true,
+        element: <Welcome />,
+      },
+      {
+        path: "home",
+        element: <Home />,
+      }
+      // {
+      //   path: "leaderboard/:slug?",
+      //   element: <Leaderboard />,
+      // },
+    ],
   },
 ];
 

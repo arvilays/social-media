@@ -1,0 +1,4 @@
+.home-center-compose {
+  display: flex;
+  flex-direction: column;
+}
