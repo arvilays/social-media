@@ -1,17 +1,13 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
+import PostsList from "./PostsList";
 import "../styles/feed.css";
 
-function Feed({
-  user,
-  feedData,
-  isFeedLoading,
-  error,
-  feedCategory,
-  setFeedCategory,
-  onPostCreated,
-  apiClient,
-}) {
+function Feed({ user, apiClient }) {
   const [createPostContent, setCreatePostContent] = useState("");
+  const [feedCategory, setFeedCategory] = useState("global");
+  const [feedData, setFeedData] = useState({ feed: [], nextCursor: null });
+  const [isFeedLoading, setIsFeedLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const handleCreatePost = async () => {
     if (!createPostContent.trim()) return;
@@ -24,12 +20,50 @@ function Feed({
         }
       });
       setCreatePostContent("");
-      onPostCreated(); // Refresh the feed after posting
+      refreshFeed();
     } catch (err) {
       console.error("Failed to create post:", err);
       alert("Could not create post. Please try again.");
     }
   };
+
+  const fetchGlobalFeed = useCallback(async (cursor) => {
+    setIsFeedLoading(true);
+    setError(null);
+    try {
+      const url = cursor ? `/feed/global?cursor=${cursor}` : '/feed/global';
+      const response = await apiClient.request(url);
+      setFeedData(response);
+    } catch (err) {
+      console.error("Failed to fetch global feed:", err);
+      setError(err);
+    } finally {
+      setIsFeedLoading(false);
+    }
+  }, [apiClient]);
+
+  const fetchFollowingFeed = useCallback(async (cursor) => {
+    setIsFeedLoading(true);
+    setError(null);
+    try {
+      const url = cursor ? `/feed/following?cursor=${cursor}` : '/feed/following';
+      const response = await apiClient.request(url);
+      setFeedData(response);
+    } catch (err) {
+      console.error("Failed to fetch following feed:", err);
+      setError(err);
+    } finally {
+      setIsFeedLoading(false);
+    }
+  }, [apiClient]); 
+
+  const refreshFeed = useCallback(() => {
+    if (feedCategory === "global") {
+      fetchGlobalFeed();
+    } else {
+      fetchFollowingFeed();
+    }
+  }, [feedCategory, fetchGlobalFeed, fetchFollowingFeed]);
 
   const renderFeedContent = () => {
     if (isFeedLoading) {
@@ -41,13 +75,24 @@ function Feed({
     if (feedData.length === 0) {
       return <div>No posts to show.</div>;
     }
-    return feedData.map((post) => (
-      <div key={post.id} className="post">
-        <div className="post-author">{post.author.username}</div>
-        <div className="post-content">{post.content}</div>
-      </div>
-    ));
+    return <PostsList posts={feedData.feed} />;
   };
+
+  // Update feed on feed category change
+  useEffect(() => {
+    if (!user) return;
+
+    if (feedCategory === "global") {
+      fetchGlobalFeed();
+    } else if (feedCategory === "following") {
+      fetchFollowingFeed();
+    }
+  }, [feedCategory, user, fetchGlobalFeed, fetchFollowingFeed]);
+
+  if (isFeedLoading) return <div className="loading-container">Loading Dashboard...</div>;
+  if (!user) {
+    return <div className="error-container">Could not load user profile. Please try logging in again.</div>;
+  }
 
   return (
     <div className="feed">
@@ -66,7 +111,7 @@ function Feed({
         </div>
       </div>
       <div className="feed-compose">
-        <div className="feed-compose-avatar">Icon</div>
+        <div className="feed-compose-avatar">{user.emoji}</div>
         <div className="feed-compose-message">
           <textarea
             value={createPostContent}
@@ -78,7 +123,7 @@ function Feed({
           <button onClick={handleCreatePost}>Submit</button>
         </div>
       </div>
-      <div className="feed-posts">{renderFeedContent()}</div>
+      <div>{renderFeedContent()}</div>
     </div>
   );
 }

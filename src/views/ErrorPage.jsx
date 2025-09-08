@@ -12,7 +12,7 @@ function ErrorPage() {
       <div className="error-status">
         <div>{error.statusText || error.message}</div>
       </div>
-      <Link to="/" className="error-home-link">
+      <Link to="/home" className="error-home-link">
         Back To Home
       </Link>
     </div>

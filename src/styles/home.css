@@ -1,3 +1,8 @@
 .home-container {
   display: flex;
+  height: 100vh;
+}
+
+.main-container {
+  flex: 1;
 }

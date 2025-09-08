@@ -16,11 +16,11 @@ const routes = [
       {
         path: "home",
         element: <Home />,
-      }
-      // {
-      //   path: "leaderboard/:slug?",
-      //   element: <Leaderboard />,
-      // },
+      },
+      {
+        path: "user/:username",
+        element: <Home currentView="profile" />
+      },
     ],
   },
 ];

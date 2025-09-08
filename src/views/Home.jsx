@@ -1,29 +1,28 @@
 import { useState, useEffect, useCallback } from "react";
-import { useNavigate, useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
 import Feed from "../components/Feed";
+import Profile from "../components/Profile";
 import "../styles/home.css";
 
-function Home() {
-  const [user, setUser] = useState(null);
-  const [feedCategory, setFeedCategory] = useState("global");
-  const [feedData, setFeedData] = useState({ feed: [], nextCursor: null });
+function Home({ currentView = "feed" }) {
+  const [self, setSelf] = useState(null);
   const [isPageLoading, setIsPageLoading] = useState(true);
-  const [isFeedLoading, setIsFeedLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   const { apiClient, token, setToken } = useOutletContext();
   const navigate = useNavigate();
+
+  const { username } = useParams();
 
   const handleLogout = useCallback(() => {
     setToken(null);
     navigate("/");
   }, [setToken, navigate]);
 
-  const fetchUser = useCallback(async () => {
+  const fetchSelf = useCallback(async () => {
     try {
       const response = await apiClient.request("/users/me");
-      setUser(response);
+      setSelf(response);
     } catch (err) {
       handleLogout();
     } finally {
@@ -31,48 +30,25 @@ function Home() {
     }
   }, [apiClient, handleLogout]);
 
-  const fetchGlobalFeed = useCallback(async (cursor) => {
-    setIsFeedLoading(true);
-    setError(null);
-    try {
-      const url = cursor ? `/feed/global?cursor=${cursor}` : '/feed/global';
-      const response = await apiClient.request(url);
-      setFeedData(response);
-    } catch (err) {
-      console.error("Failed to fetch global feed:", err);
-      setError(err); 
-    } finally {
-      setIsFeedLoading(false);
+  const renderCurrentView = () => {
+    switch (currentView) {
+      case "profile":
+        return (
+          <Profile
+            username={username} 
+            apiClient={apiClient}
+          /> 
+        );
+      case "feed":
+      default:
+        return (
+          <Feed
+            user={self}
+            apiClient={apiClient}
+          />
+        );
     }
-  }, [apiClient]);
-
-  const fetchFollowingFeed = useCallback(async (cursor) => {
-    setIsFeedLoading(true);
-    setError(null);
-    try {
-      const url = cursor ? `/feed/following?cursor=${cursor}` : '/feed/following';
-      const response = await apiClient.request(url);
-      setFeedData(response);
-    } catch (err) {
-      console.error("Failed to fetch following feed:", err);
-      setError(err); 
-    } finally {
-      setIsFeedLoading(false);
-    }
-  }, [apiClient]); 
-
-  const refreshFeed = useCallback(() => {
-    if (feedCategory === "global") {
-      fetchGlobalFeed();
-    } else {
-      fetchFollowingFeed();
-    }
-  }, [feedCategory, fetchGlobalFeed, fetchFollowingFeed]);
-
-  // TODO:
-  // FETCH GLOBAL FEED (DEFAULT)
-  // FETCH FOLLOWING FEED IF REQUESTED
-  // ENABLE REPLIES
+  };
 
   // Initial load
   useEffect(() => {
@@ -81,41 +57,21 @@ function Home() {
       return;
     }
 
-    fetchUser();
-  }, [token, navigate, fetchUser]);
+    fetchSelf();
+  }, [token, navigate, fetchSelf]);
 
-  // Update feed on feed category change
-  useEffect(() => {
-    if (!user) return;
-
-    if (feedCategory === "global") {
-      fetchGlobalFeed();
-    } else if (feedCategory === "following") {
-      fetchFollowingFeed();
-    }
-  }, [feedCategory, user, fetchGlobalFeed, fetchFollowingFeed]);
-
-  if (isPageLoading) return <div className="loading-container">Loading Dashboard...</div>;
-  if (!user) {
-    return <div className="error-container">Could not load user profile. Please try logging in again.</div>;
-  }
+  if (isPageLoading) return <>Loading</>;
 
   return (
     <div className="home-container">
       <Sidebar
-        user={user}
+        user={self}
         handleLogout={handleLogout}
       />
-      <Feed 
-        user={user}
-        feedData={feedData.feed} 
-        isFeedLoading={isFeedLoading}
-        error={error}
-        feedCategory={feedCategory}
-        setFeedCategory={setFeedCategory} 
-        onPostCreated={refreshFeed} 
-        apiClient={apiClient}
-      />
+
+      <div className="main-container">
+        {renderCurrentView()}
+      </div>
     </div>
   );
 }

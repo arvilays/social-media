@@ -1,25 +1,34 @@
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../styles/sidebar.css";
 
 function Sidebar({ user, handleLogout }) {
-  const navigate = useNavigate();
+  const navItems = [
+    { label: "Logo", path: "/home" },
+    { label: "Home", path: "/home" },
+    { label: "Profile", path: `/user/${user.username}` },
+    { label: "Explore", path: "/explore" },
+    { label: "Bookmarks", path: "/bookmarks" }
+  ];
 
   return (
-    <div className="sidebar">
-      <div className="sidebar-nav">
-        <div onClick={() => navigate("/home")}>Logo</div>
-        <div onClick={() => navigate("/home")}>Home</div>
-        <div onClick={() => navigate("/explore")}>Explore</div>
-        <div onClick={() => navigate("/bookmarks")}>Bookmarks</div>
+    <aside className="sidebar">
+      <nav className="sidebar-nav">
+        <ul>
+          {navItems.map((item) => (
+            <li key={item.label}>
+              <Link to={item.path} className="sidebar-link">
+                {item.label}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+      <div className="sidebar-profile">
+        <span>{user.username}</span>
+        <button onClick={handleLogout} className="logout-btn">Logout</button>
       </div>
-  
-      <div
-        className="sidebar-profile"
-        onClick={handleLogout}
-      >
-        {user.username}
-      </div>
-    </div>
+    </aside>
   );
 }
 
