@@ -1,12 +1,12 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useOutletContext, useParams } from "react-router-dom";
 import Sidebar from "../components/Sidebar";
-import Feed from "../components/Feed";
+import Home from "../components/Home";
 import Profile from "../components/Profile";
-import "../styles/home.css";
+import "../styles/dashboard.css";
 
-function Home({ currentView = "feed" }) {
-  const [self, setSelf] = useState(null);
+function Dashboard({ currentView = "home" }) {
+  const [authUser, setAuthUser] = useState(null);
   const [isPageLoading, setIsPageLoading] = useState(true);
 
   const { apiClient, token, setToken } = useOutletContext();
@@ -19,11 +19,11 @@ function Home({ currentView = "feed" }) {
     navigate("/");
   }, [setToken, navigate]);
 
-  const fetchSelf = useCallback(async () => {
+  const fetchAuthUser = useCallback(async () => {
     try {
-      const response = await apiClient.request("/users/me");
-      setSelf(response);
-    } catch (err) {
+      const response = await apiClient.request("/user/me");
+      setAuthUser(response);
+    } catch {
       handleLogout();
     } finally {
       setIsPageLoading(false);
@@ -35,15 +35,16 @@ function Home({ currentView = "feed" }) {
       case "profile":
         return (
           <Profile
-            username={username} 
+            username={username}
+            authUser={authUser}
             apiClient={apiClient}
           /> 
         );
-      case "feed":
+      case "home":
       default:
         return (
-          <Feed
-            user={self}
+          <Home
+            authUser={authUser}
             apiClient={apiClient}
           />
         );
@@ -57,15 +58,15 @@ function Home({ currentView = "feed" }) {
       return;
     }
 
-    fetchSelf();
-  }, [token, navigate, fetchSelf]);
+    fetchAuthUser();
+  }, [token, navigate, fetchAuthUser]);
 
   if (isPageLoading) return <>Loading</>;
 
   return (
-    <div className="home-container">
+    <div className="dashboard-container">
       <Sidebar
-        user={self}
+        authUser={authUser}
         handleLogout={handleLogout}
       />
 
@@ -76,5 +77,5 @@ function Home({ currentView = "feed" }) {
   );
 }
 
-export default Home;
+export default Dashboard;
 

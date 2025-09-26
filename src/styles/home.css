@@ -1,8 +1,27 @@
-.home-container {
-  display: flex;
-  height: 100vh;
+.home {
+  
 }
 
-.main-container {
+.home-category {
+  display: flex;
+  text-align: center;
+}
+
+.home-category div {
   flex: 1;
+}
+
+.home-compose {
+  display: flex;
+}
+
+.home-compose-avatar {
+  text-align: center;
+  width: 80px;
+}
+
+.home-compose-message {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
 }

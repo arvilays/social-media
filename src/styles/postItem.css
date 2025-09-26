@@ -1,13 +1,14 @@
-.posts {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
 .post {
   background-color: rgb(168, 168, 168);
+}
+
+.post-author {
+  display: flex;
+  gap: 5px;
 }
 
 .post-actions {
   display: flex;
 }
+
+.liked {}

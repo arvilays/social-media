@@ -14,11 +14,11 @@ function Welcome() {
   };
 
   // Navigate to home if token already exists
-  // useEffect(() => {
-  //   if (token) {
-  //     navigate("/home");
-  //   }
-  // }, [token, navigate]);
+  useEffect(() => {
+    if (token) {
+      navigate("/home");
+    }
+  }, [token, navigate]);
 
   return (
     <>

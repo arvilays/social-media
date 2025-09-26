@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from "react";
-import PostsList from "./PostsList";
-import "../styles/feed.css";
+import FeedList from "./FeedList";
+import "../styles/home.css";
 
-function Feed({ user, apiClient }) {
+function Home({ authUser, apiClient }) {
   const [createPostContent, setCreatePostContent] = useState("");
-  const [feedCategory, setFeedCategory] = useState("global");
+  const [feedCategory, setFeedCategory] = useState("global"); // global, following
   const [feedData, setFeedData] = useState({ feed: [], nextCursor: null });
   const [isFeedLoading, setIsFeedLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -13,7 +13,7 @@ function Feed({ user, apiClient }) {
     if (!createPostContent.trim()) return;
 
     try {
-      await apiClient.request("/posts", { 
+      await apiClient.request("/post", { 
         method: "POST", 
         data: {
           content: createPostContent, 
@@ -75,28 +75,28 @@ function Feed({ user, apiClient }) {
     if (feedData.length === 0) {
       return <div>No posts to show.</div>;
     }
-    return <PostsList posts={feedData.feed} />;
+    return <FeedList posts={feedData.feed} refreshFeed={refreshFeed} authUser={authUser} apiClient={apiClient} />;
   };
 
   // Update feed on feed category change
   useEffect(() => {
-    if (!user) return;
+    if (!authUser) return;
 
     if (feedCategory === "global") {
       fetchGlobalFeed();
     } else if (feedCategory === "following") {
       fetchFollowingFeed();
     }
-  }, [feedCategory, user, fetchGlobalFeed, fetchFollowingFeed]);
+  }, [feedCategory, authUser, fetchGlobalFeed, fetchFollowingFeed]);
 
   if (isFeedLoading) return <div className="loading-container">Loading Dashboard...</div>;
-  if (!user) {
+  if (!authUser) {
     return <div className="error-container">Could not load user profile. Please try logging in again.</div>;
   }
 
   return (
-    <div className="feed">
-      <div className="feed-category">
+    <div className="home">
+      <div className="home-category">
         <div
           className={feedCategory === "global" ? "active" : ""}
           onClick={() => setFeedCategory("global")}
@@ -110,9 +110,9 @@ function Feed({ user, apiClient }) {
           Following
         </div>
       </div>
-      <div className="feed-compose">
-        <div className="feed-compose-avatar">{user.emoji}</div>
-        <div className="feed-compose-message">
+      <div className="home-compose">
+        <div className="home-compose-avatar">{authUser.emoji}</div>
+        <div className="home-compose-message">
           <textarea
             value={createPostContent}
             onChange={(e) => setCreatePostContent(e.target.value)}
@@ -128,4 +128,4 @@ function Feed({ user, apiClient }) {
   );
 }
 
-export default Feed;
+export default Home;

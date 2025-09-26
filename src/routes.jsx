@@ -1,6 +1,6 @@
 import App from "./App";
 import Welcome from "./views/Welcome";
-import Home from "./views/Home";
+import Dashboard from "./views/Dashboard";
 import ErrorPage from "./views/ErrorPage";
 
 const routes = [
@@ -15,11 +15,11 @@ const routes = [
       },
       {
         path: "home",
-        element: <Home />,
+        element: <Dashboard />,
       },
       {
         path: "user/:username",
-        element: <Home currentView="profile" />
+        element: <Dashboard currentView="profile" />
       },
     ],
   },
