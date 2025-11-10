@@ -1,0 +1,47 @@
+.welcome-container {
+  font-family: "space mono", monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: 100vh;
+  padding: 20px 10px;
+}
+
+.welcome-header-logo img {
+  position: relative;
+  right: 10px;
+  max-width: clamp(150px, 50vw, 300px);
+}
+
+.welcome-header-title {
+  color: white;
+  font-family: "space mono", monospace;
+  font-size: clamp(2em, 10vw, 5em);
+  padding: 0 10px;
+}
+
+ .welcome-header-subtitle {
+   color: white;
+   font-family: "space mono", monospace;
+   font-size: clamp(0.8em, 3vw, 1.5em);
+   display: inline-block;
+ }
+
+ .welcome-auth-switch {
+   background-color: white;
+   padding: 16px;
+   max-width: 400px;
+   border-radius: 8px;
+ }
+
+ .welcome-guest-button {
+   background-color: black;
+   color: white;
+   outline: 2px solid white;
+   margin-top: 16px;
+   padding: 16px;
+   border-radius: 8px;
+   width: 100%;
+ }

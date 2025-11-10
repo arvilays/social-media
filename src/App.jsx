@@ -1,8 +1,8 @@
 import { useState, useMemo } from "react";
 import { Outlet } from "react-router-dom";
-import apiClient from "./api";
+import apiClient from "./api/ApiClient";
 
-function App() {
+export const App = () => {
   const [token, setToken] = useState(apiClient.token);
 
   const handleSetToken = (newToken) => {
@@ -17,6 +17,6 @@ function App() {
   }), [token]);
 
   return <Outlet context={context} />;
-}
+};
 
 export default App;

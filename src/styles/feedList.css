@@ -1,6 +1,19 @@
 .feed {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  width: 100%;
 }
 
+.feed-end-message {
+  background-color: black;
+  text-align: center;
+  padding: 20px;
+  border-top: 1px solid hsla(0, 0%, 100%, 20%);
+  border-bottom: 1px solid hsla(0, 0%, 100%, 20%);
+}
+
+.feed-empty {
+  color: white;
+  font-size: 1em;
+  text-align: center;
+  padding: 20px;
+  border-radius: 8px;
+}

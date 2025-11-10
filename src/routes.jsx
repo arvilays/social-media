@@ -21,6 +21,22 @@ const routes = [
         path: "user/:username",
         element: <Dashboard currentView="profile" />
       },
+      {
+        path: "post/:postId",
+        element: <Dashboard currentView="post" />
+      },
+      {
+        path: "explore",
+        element: <Dashboard currentView="explore" />
+      },
+      {
+        path: "bookmarks",
+        element: <Dashboard currentView="bookmarks" />
+      },
+      {
+        path: "settings",
+        element: <Dashboard currentView="settings" />
+      },
     ],
   },
 ];

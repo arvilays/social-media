@@ -1,25 +1,39 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
-/* fonts: "roboto" */
-
-:root {
-  --main-bg-color: grey;
-}
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+/* fonts: roboto, space mono */
 
 body {
-  font-family: "roboto", Arial, sans-serif;
+  min-height: 100vh;
+  background-image: url("/src/assets/stars.jpg");
+  background-attachment: fixed; 
+  background-size: cover; 
+  background-position: center; 
+
+  font-family: "Roboto", Arial, Helvetica, sans-serif;
   font-size: 16px;
-  background-color: var(--main-bg-color);
 }
 
-.hide {
-  display: none;
+hr {
+  width: 500px;
+  margin: 40px 0px;
 }
 
-.noselect {
-  -webkit-touch-callout: none;
-    -webkit-user-select: none; 
-     -khtml-user-select: none; 
-       -moz-user-select: none; 
-        -ms-user-select: none; 
-            user-select: none; 
+.bold {
+  font-weight: bold;
 }
+
+/* Blinking typing cursor animation */
+.typing-cursor {
+  display: inline-block;
+  width: 2px;
+  height: 1em;
+  background-color: white;
+  margin-left: 2px;
+  animation: blink 1.15s steps(1) infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+

@@ -1,0 +1,10 @@
+.post-main {
+  border: 1px solid grey;
+}
+
+.post-replies-header {
+  font-size: 1.5em;
+  padding: 20px;
+  border-top: 1px solid hsla(0, 0%, 100%, 20%);
+  border-bottom: 1px solid hsla(0, 0%, 100%, 20%);
+}

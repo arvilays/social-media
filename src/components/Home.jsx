@@ -1,131 +1,134 @@
-import { useState, useEffect, useCallback } from "react";
-import FeedList from "./FeedList";
+import { useState, useEffect, useCallback, useRef } from "react";
+import { useFeed } from "../hooks/useFeed";
+import { usePost } from "../hooks/usePost";
+import { PostComposer } from "./post/PostComposer";
+import { FeedTabs } from "./feed/FeedTabs";
+import { FeedList } from "./feed/FeedList";
+import { LoadingMessage } from "./common/LoadingMessage";
+import { ErrorMessage } from "./common/ErrorMessage";
 import "../styles/home.css";
 
-function Home({ authUser, apiClient }) {
-  const [createPostContent, setCreatePostContent] = useState("");
-  const [feedCategory, setFeedCategory] = useState("global"); // global, following
-  const [feedData, setFeedData] = useState({ feed: [], nextCursor: null });
-  const [isFeedLoading, setIsFeedLoading] = useState(true);
-  const [error, setError] = useState(null);
+export const Home = ({ authUser, apiClient }) => {
+  const [feedCategory, setFeedCategory] = useState("global");
 
-  const handleCreatePost = async () => {
-    if (!createPostContent.trim()) return;
+  const {
+    posts,
+    isLoading,
+    isFetchingNextPage,
+    error,
+    fetchFeed,
+    fetchNextPage,
+    hasNextPage,
+  } = useFeed(apiClient);
 
-    try {
-      await apiClient.request("/post", { 
-        method: "POST", 
-        data: {
-          content: createPostContent, 
-        }
-      });
-      setCreatePostContent("");
-      refreshFeed();
-    } catch (err) {
-      console.error("Failed to create post:", err);
-      alert("Could not create post. Please try again.");
-    }
-  };
+  const { createPost } = usePost(apiClient);
 
-  const fetchGlobalFeed = useCallback(async (cursor) => {
-    setIsFeedLoading(true);
-    setError(null);
-    try {
-      const url = cursor ? `/feed/global?cursor=${cursor}` : '/feed/global';
-      const response = await apiClient.request(url);
-      setFeedData(response);
-    } catch (err) {
-      console.error("Failed to fetch global feed:", err);
-      setError(err);
-    } finally {
-      setIsFeedLoading(false);
-    }
-  }, [apiClient]);
-
-  const fetchFollowingFeed = useCallback(async (cursor) => {
-    setIsFeedLoading(true);
-    setError(null);
-    try {
-      const url = cursor ? `/feed/following?cursor=${cursor}` : '/feed/following';
-      const response = await apiClient.request(url);
-      setFeedData(response);
-    } catch (err) {
-      console.error("Failed to fetch following feed:", err);
-      setError(err);
-    } finally {
-      setIsFeedLoading(false);
-    }
-  }, [apiClient]); 
+  // Show "Following" only if user is logged in.
+  const tabs = authUser
+    ? [
+      { value: "global", label: "Global" },
+      { value: "following", label: "Following" },
+    ]
+    : [{ value: "global", label: "Global" }];
 
   const refreshFeed = useCallback(() => {
-    if (feedCategory === "global") {
-      fetchGlobalFeed();
-    } else {
-      fetchFollowingFeed();
-    }
-  }, [feedCategory, fetchGlobalFeed, fetchFollowingFeed]);
+    const endpoint =
+      feedCategory === "global" ? "/feed/global" : "/feed/following";
+    fetchFeed(endpoint);
+  }, [feedCategory, fetchFeed]);
 
-  const renderFeedContent = () => {
-    if (isFeedLoading) {
-      return <div>Loading feed...</div>;
-    }
-    if (error) {
-      return <div className="error-container">Failed to load feed: {error.message}</div>;
-    }
-    if (feedData.length === 0) {
-      return <div>No posts to show.</div>;
-    }
-    return <FeedList posts={feedData.feed} refreshFeed={refreshFeed} authUser={authUser} apiClient={apiClient} />;
+  useEffect(() => {
+    if (feedCategory === "following" && !authUser) return;
+    refreshFeed();
+  }, [feedCategory, authUser, refreshFeed]);
+
+  const handleCreatePost = async (content) => {
+    await createPost(content);
+    refreshFeed();
   };
 
-  // Update feed on feed category change
+  const loaderRef = useRef(null);
+
   useEffect(() => {
-    if (!authUser) return;
+    if (!loaderRef.current) return;
 
-    if (feedCategory === "global") {
-      fetchGlobalFeed();
-    } else if (feedCategory === "following") {
-      fetchFollowingFeed();
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const target = entries[0];
+        if (target.isIntersecting && hasNextPage && !isFetchingNextPage) {
+          fetchNextPage();
+        }
+      },
+      { rootMargin: "500px" }
+    );
+
+    const currentLoader = loaderRef.current;
+    observer.observe(currentLoader);
+
+    return () => observer.unobserve(currentLoader);
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  useEffect(() => {
+    document.title = "home · stellr";
+  }, []);
+
+  const renderFeedContent = () => {
+    if (feedCategory === "following" && !authUser) return null;
+
+    if (isLoading && posts.length === 0) {
+      return <LoadingMessage message="Loading feed..." />;
     }
-  }, [feedCategory, authUser, fetchGlobalFeed, fetchFollowingFeed]);
 
-  if (isFeedLoading) return <div className="loading-container">Loading Dashboard...</div>;
-  if (!authUser) {
-    return <div className="error-container">Could not load user profile. Please try logging in again.</div>;
-  }
+    if (error && posts.length === 0) {
+      return (
+        <ErrorMessage
+          message={`Failed to load feed: ${error}`}
+          onRetry={refreshFeed}
+        />
+      );
+    }
+
+    if (!posts.length) {
+      return <div className="home-empty">No posts to show.</div>;
+    }
+
+    return (
+      <>
+        <FeedList
+          posts={posts}
+          refreshFeed={refreshFeed}
+          authUser={authUser}
+          apiClient={apiClient}
+        />
+        {isFetchingNextPage && <LoadingMessage message="Loading more..." />}
+        {!hasNextPage && <div className="feed-end-message">You've reached the end!</div>}
+        <div ref={loaderRef} style={{ height: "1px" }} />
+      </>
+    );
+  };
 
   return (
-    <div className="home">
-      <div className="home-category">
-        <div
-          className={feedCategory === "global" ? "active" : ""}
-          onClick={() => setFeedCategory("global")}
-        >
-          Global
-        </div>
-        <div
-          className={feedCategory === "following" ? "active" : ""}
-          onClick={() => setFeedCategory("following")}
-        >
-          Following
-        </div>
-      </div>
-      <div className="home-compose">
-        <div className="home-compose-avatar">{authUser.emoji}</div>
-        <div className="home-compose-message">
-          <textarea
-            value={createPostContent}
-            onChange={(e) => setCreatePostContent(e.target.value)}
-            placeholder="What's on your mind?"
-            minLength="1"
-            maxLength="280"
-          />
-          <button onClick={handleCreatePost}>Submit</button>
-        </div>
-      </div>
-      <div>{renderFeedContent()}</div>
+    <div className="home-container">
+      <FeedTabs
+        activeTab={feedCategory}
+        tabs={tabs}
+        onTabChange={(tab) => {
+          if (tab === "following" && !authUser) return;
+          setFeedCategory(tab);
+        }}
+      />
+
+      {authUser && (
+        <PostComposer
+          authUser={authUser}
+          onSubmit={handleCreatePost}
+          placeholder="What's on your mind?"
+        />
+      )}
+
+      <div className="home-feed">{renderFeedContent()}</div>
     </div>
   );
-}
+};
 
 export default Home;

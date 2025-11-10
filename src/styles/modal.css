@@ -1,0 +1,156 @@
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 50;
+  backdrop-filter: blur(2px);
+}
+
+.modal-container {
+  overflow: hidden;
+  background-color: black;
+  width: 100%;
+  max-width: 480px;
+  box-shadow: 0px 0px 10px grey;
+  border-radius: 10px;
+  scrollbar-width: thin;
+  scrollbar-color: #999 transparent;
+}
+
+.modal-header {
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px 18px;
+  border-bottom: 1px solid #272727;
+}
+
+.modal-title {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+.modal-close {
+  cursor: pointer;
+  color: grey;
+  font-size: 1.4em;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+  color: black;
+}
+
+.modal-body {
+  padding: 16px;
+  max-height: 70vh;
+  overflow-y: auto;
+}
+
+.modal-loading,
+.modal-empty {
+  color: grey;
+  text-align: center;
+  padding: 20px;
+}
+
+/* Follow List Modal */
+.modal-user-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.modal-user-item {
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  transition: background 0.15s ease;
+}
+
+.modal-user-item:hover {
+  background: #2c2c2c;
+}
+
+.modal-user-avatar {
+  font-size: 1.6em;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.modal-user-display-name {
+  color: white;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+  max-width: 100%;
+}
+
+.modal-user-username {
+  color: grey;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+/* Reply Modal */
+.modal-original-post {
+  background: #181818;
+  margin-bottom: 16px;
+  padding: 12px;
+  border: 1px solid #e5e5e5;
+  border-radius: 8px;
+}
+
+.modal-post-author {
+  color: white;
+  font-size: 1em;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.modal-post-emoji {
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-post-display-name {
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.modal-post-username {
+  color: grey;
+}
+
+.modal-post-content {
+  font-family: "roboto", Arial;
+  color: white;
+}

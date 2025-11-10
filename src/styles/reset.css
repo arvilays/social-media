@@ -1,31 +1,34 @@
-*, *::before, *::after {
-  box-sizing: border-box;
-}
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
+
+html,
 body {
-  line-height: 1.5;
-  -webkit-font-smoothing: antialiased;
+  height: 100%;
 }
-img, picture, video, canvas, svg {
-  display: block;
-  max-width: 100%;
+
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
 }
-input, button, textarea, select {
-  border: 1px solid black;
-  font: inherit;
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
-p, h1, h2, h3, h4, h5, h6 {
-  overflow-wrap: break-word;
+
+input,
+textarea {
+  font-family: inherit;
+  border: none;
+  outline: none;
 }
-p {
-  text-wrap: pretty;
-}
-h1, h2, h3, h4, h5, h6 {
-  text-wrap: balance;
-}
-#root, #__next {
-  isolation: isolate;
+
+ul,
+ol {
+  list-style: none;
 }

@@ -1,16 +1,19 @@
 import { useState } from "react";
+import { ErrorMessage } from "./common/ErrorMessage";
+import "../styles/authForm.css";
 
-function AuthForm({ isLogin, apiClient, onAuthSuccess }) {
+export const AuthForm = ({ isLogin, apiClient, onAuthSuccess }) => {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (loading) return;
+
     setError("");
     setLoading(true);
 
-    const formData = new FormData(e.target);
-    const data = Object.fromEntries(formData.entries());
+    const data = Object.fromEntries(new FormData(e.target).entries());
 
     if (!isLogin && data.password !== data.confirmPassword) {
       setError("Passwords do not match.");
@@ -31,14 +34,16 @@ function AuthForm({ isLogin, apiClient, onAuthSuccess }) {
           data,
         });
 
-        const response = await apiClient.request("/login", {
+        const loginResponse = await apiClient.request("/login", {
           method: "POST",
           data: { username: data.username, password: data.password },
         });
-        onAuthSuccess(response.token);
+        onAuthSuccess(loginResponse.token);
       }
+
+      e.target.reset();
     } catch (err) {
-      setError(err.message);
+      setError(err.message || "An error occurred. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -46,30 +51,45 @@ function AuthForm({ isLogin, apiClient, onAuthSuccess }) {
 
   return (
     <div className="auth-container">
-      <form onSubmit={handleSubmit}>
-        {!isLogin && (
-          <div className="signup-disclaimer">
-            Disclaimer Placeholder
-          </div>
-        )}
-        <input type="text" name="username" placeholder="Username" required minLength="1" maxLength="32" />
-        <input type="password" name="password" placeholder="Password" minLength="3" required />
+      <form onSubmit={handleSubmit} className="auth-form">
+        <input
+          type="text"
+          name="username"
+          placeholder="username"
+          required
+          minLength={4}
+          maxLength={15}
+          disabled={loading}
+        />
+
+        <input
+          type="password"
+          name="password"
+          placeholder="password"
+          required
+          minLength={3}
+          disabled={loading}
+        />
+
         {!isLogin && (
           <input
             type="password"
             name="confirmPassword"
-            placeholder="Confirm Password"
-            minLength="3"
+            placeholder="confirm password"
             required
+            minLength={3}
+            disabled={loading}
           />
         )}
+
         <button type="submit" disabled={loading}>
-          {loading ? "Processing..." : isLogin ? "Log In" : "Create Account"}
+          {loading ? "processing..." : isLogin ? "login" : "create account"}
         </button>
-        {error && <div className="auth-error">{error}</div>}
+
+        {error && <ErrorMessage message={error} />}
       </form>
     </div>
   );
-}
+};
 
 export default AuthForm;

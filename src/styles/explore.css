@@ -1,0 +1,66 @@
+.explore-container {
+  padding: 25px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.explore-search-input {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1em;
+  margin-bottom: 20px;
+  border-radius: 20px;
+}
+
+.explore-message {
+  color: grey;
+  text-align: center;
+  padding: 20px;
+}
+
+.explore-users {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.user-card {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+}
+
+.user-card:hover {
+  background-color: #2c2c2c;
+}
+
+.user-card-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.user-card-emoji {
+  font-size: 2.5em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+  width: 50px;
+  height: 50px;
+}
+
+.user-card-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-card-display-name {
+  font-weight: bold;
+}
+
+.user-card-username {
+  color: grey;
+  font-size: 0.9em;
+}

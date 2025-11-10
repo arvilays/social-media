@@ -1,14 +1,128 @@
 .post {
-  background-color: rgb(168, 168, 168);
+  background-color: black;
+  color: white;
+  padding: 15px 10px;
+  border-top: 1px solid hsla(0, 0%, 100%, 20%);
+  border-bottom: 1px solid hsla(0, 0%, 100%, 20%);
+}
+
+.post-repost-message {
+  color: grey;
+  font-size: clamp(0.7rem, 2vw, 0.8em);
+  margin-bottom: 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-author-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 .post-author {
   display: flex;
-  gap: 5px;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 1;
+}
+
+.post-emoji {
+  font-size: 1.5em;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.post-display-name {
+  font-weight: bold;
+  font-size: clamp(0.9rem, 3vw, 1em);
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.post-display-name:hover {
+  text-decoration: underline;
+}
+
+.post-username {
+  color: grey;
+  font-size: clamp(0.8rem, 2.5vw, 0.9em);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.post-date {
+  color: grey;
+  font-size: clamp(0.8rem, 2.5vw, 0.9em);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.post-content {
+  font-family: "roboto", Arial;
+  padding: 10px 5px 15px;
+  font-size: 1em;
+}
+
+.post-content:hover {
+  cursor: pointer;
 }
 
 .post-actions {
   display: flex;
+  justify-content: space-between;
+  padding: 0px 10px;
 }
 
-.liked {}
+.post-actions button {
+  color: white;
+  font-size: clamp(0.9rem, 2vw, 1em);
+  text-align: left;
+  flex-basis: 100%;
+}
+
+.post-actions button:disabled {
+  cursor: not-allowed;
+}
+
+.post-delete {
+  display: flex;
+  gap: 10px;
+}
+
+.post-delete-confirm {
+  display: flex;
+  gap: 5px;
+}
+
+@media (min-width: 601px) {
+  .post {
+    padding: 20px;
+  }
+
+  .post-emoji {
+    width: 50px;
+    height: 50px;
+    font-size: 2em;
+  }
+
+  .post-actions {
+    gap: 80px;
+    justify-content: initial;
+  }
+
+  .post-actions button {
+    font-size: 1em;
+    flex-basis: auto;
+    text-align: center;
+  }
+}

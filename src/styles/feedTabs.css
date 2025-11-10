@@ -1,0 +1,25 @@
+.feed-tabs {
+  display: flex;
+  position: sticky;
+  top: 0;
+  justify-content: space-around;
+  z-index: 10;
+}
+
+.feed-tabs button {
+  flex: 1;
+  background-color: hsla(0, 0%, 0%, 0.5);
+  color: white;
+  padding: 10px;
+  border: 1px solid hsla(0, 0%, 100%, 0.2);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.feed-tabs button.active {
+  background-color: hsla(0, 0%, 50%, 0.5);
+  color: white;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
