@@ -69,8 +69,10 @@
 
 .post-content {
   font-family: "roboto", Arial;
-  padding: 10px 5px 15px;
   font-size: 1em;
+  word-break: break-word; 
+  overflow-wrap: break-word;
+  padding: 10px 5px 15px;
 }
 
 .post-content:hover {
