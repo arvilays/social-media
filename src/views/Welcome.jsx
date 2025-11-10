@@ -62,6 +62,17 @@ export const Welcome = () => {
           guest mode
         </button>
       </div>
+
+      <div className="credits-dev">
+        Social Media Project by&nbsp;
+        <a
+          href="https://github.com/arvilays"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          arvilays
+        </a>
+      </div>
     </div>
   );
 };
