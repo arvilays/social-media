@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { LoadingMessage } from "./common/LoadingMessage";
-import "../styles/Explore.css";
+import "../styles/explore.css";
 
 const UserCard = ({ user }) => (
   <Link to={`/user/${user.username}`} className="user-card-link">
