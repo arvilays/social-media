@@ -3,7 +3,7 @@ import { useFeed } from "../hooks/useFeed";
 import { FeedList } from "./feed/FeedList";
 import { LoadingMessage } from "./common/LoadingMessage";
 import { ErrorMessage } from "./common/ErrorMessage";
-import "../styles/Bookmarks.css";
+import "../styles/bookmarks.css";
 
 export const Bookmarks = ({ authUser, apiClient }) => {
   const {
