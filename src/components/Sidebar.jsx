@@ -11,14 +11,14 @@ export const Sidebar = ({ authUser, handleLogout }) => {
   const isAuthenticated = !!authUser;
 
   const navItems = [
-    { label: "", path: "/home", icon: logoImage },
-    { label: "Home", path: "/home", icon: homeImage },
-    { label: "Explore", path: "/explore", icon: exploreImage },
+    { label: "", path: "/home", icon: logoImage, title: "Stellr" },
+    { label: "Home", path: "/home", icon: homeImage, title: "Home" },
+    { label: "Explore", path: "/explore", icon: exploreImage, title: "Explore" },
     ...(isAuthenticated
       ? [
-        { label: "Profile", path: `/user/${authUser.username}`, icon: profileImage },
-        { label: "Bookmarks", path: "/bookmarks", icon: bookmarksImage },
-        { label: "Settings", path: "/settings", icon: settingsImage },
+        { label: "Profile", path: `/user/${authUser.username}`, icon: profileImage, title: "Profile" },
+        { label: "Bookmarks", path: "/bookmarks", icon: bookmarksImage, title: "Bookmarks" },
+        { label: "Settings", path: "/settings", icon: settingsImage, title: "Settings" },
       ]
       : []),
   ];
@@ -36,6 +36,7 @@ export const Sidebar = ({ authUser, handleLogout }) => {
               className="sidebar-icon"
               src={item.icon}
               alt={item.label || "logo"}
+              title={item.title}
             />
             {item.label && <span className="sidebar-label">{item.label}</span>}
           </Link>
