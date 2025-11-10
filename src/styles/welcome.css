@@ -46,17 +46,13 @@
    width: 100%;
  }
 
- /* --- Credits --- */
- .credits-dev {
-   color: rgb(95, 95, 95);
-   font-size: 0.8em;
-   position: fixed;
-   bottom: 0%;
-   left: 50%;
-   transform: translate(-50%, -50%);
- }
+.credits-dev {
+  color: rgb(95, 95, 95);
+  font-size: 0.8em;
+  margin: 20px;
+}
 
- .credits-dev a {
-   color: rgb(95, 95, 95);
-   text-decoration: none;
- }
+.credits-dev a {
+  color: rgb(95, 95, 95);
+  text-decoration: none;
+}
