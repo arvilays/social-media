@@ -49,18 +49,12 @@ export const Sidebar = ({ authUser, handleLogout }) => {
           {authUser?.username ? `@${authUser.username}` : "Guest"}
         </div>
 
-        {isAuthenticated ? (
-          <button
-            onClick={handleLogout}
-            className="sidebar-auth-logout"
-          >
-            logout
-          </button>
-        ) : (
-          <Link to="/" className="sidebar-auth-logout">
-            login
-          </Link>
-        )}
+        <button
+          onClick={handleLogout}
+          className="sidebar-auth-logout"
+        >
+          {isAuthenticated ? "logout" : "login"}
+        </button>
       </div>
     </div>
   );
